@@ -375,7 +375,7 @@ namespace Project_FinchControl
         }
         /// <summary>
         /// *****************************************************************
-        /// *               Talent Show > Dance                             *
+        /// *               Talent Show > Combo                            *
         /// *****************************************************************
         /// </summary>
         /// <param name="finchRobot">finch robot object</param>
