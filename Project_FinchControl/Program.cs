@@ -13,7 +13,7 @@ namespace Project_FinchControl
     // Application Type: Console
     // Author: Ludwig, Ben
     // Dated Created: 6/4/21
-    // Last Modified: 6/4/21
+    // Last Modified: 6/19/21
     //
     // **************************************************
 
@@ -325,6 +325,7 @@ namespace Project_FinchControl
                 if (timeToMonitor <= 0)
                 {
                     Console.WriteLine("\tPlease enter a positive number.");
+                    Console.ReadKey();
                 }
                 else
                 {
@@ -348,7 +349,7 @@ namespace Project_FinchControl
             {
                 DisplayScreenHeader("Select Alarm Type");
 
-                Console.WriteLine("\tPlease select whether the alarm will measure [light] or [temperature]: ");
+                Console.Write("\tPlease select whether the alarm will measure [light] or [temperature]: ");
                 lightOrTemp = Console.ReadLine();
                 Console.WriteLine();
 
@@ -402,6 +403,7 @@ namespace Project_FinchControl
                 if (minMaxValue <= 0)
                 {
                     Console.WriteLine("\tPlease enter a positive number.");
+                    Console.ReadKey();
                 }
                 else
                 {
@@ -425,7 +427,7 @@ namespace Project_FinchControl
             {
                 DisplayScreenHeader("Select Range Type");
 
-                Console.WriteLine("\tPlease select whether the alarm will trigger on a [minimum] or [maximum]: ");
+                Console.Write("\tPlease select whether the alarm will trigger on a [minimum] or [maximum]: ");
                 rangeType = Console.ReadLine();
                 Console.WriteLine();
 
