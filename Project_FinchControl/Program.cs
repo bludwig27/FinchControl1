@@ -319,6 +319,7 @@ namespace Project_FinchControl
 
         private static void UserProgrammingGetCommands(List<Command> commands)
         {
+            commands.Clear();
             Command command = Command.NONE;
 
             DisplayScreenHeader("Add Commands");
