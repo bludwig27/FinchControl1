@@ -298,6 +298,7 @@ namespace Project_FinchControl
                 Console.WriteLine($"\t{commandFeedback}");
             }
 
+            DisplayContinuePrompt();
         }
 
         //Display list of commands
