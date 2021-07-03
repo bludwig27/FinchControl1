@@ -58,8 +58,20 @@ namespace Project_FinchControl
         /// </summary>
         static void SetTheme()
         {
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.BackgroundColor = ConsoleColor.White;
+            string ioMessage = "";
+            (ConsoleColor foregroundColor, ConsoleColor backgroundColor) themeColors;
+
+            themeColors = ReadThemeData(out ioMessage);
+            Console.ForegroundColor = themeColors.foregroundColor;
+            Console.BackgroundColor = themeColors.backgroundColor;
+
+            Console.WriteLine();
+            Console.WriteLine($"File I/O status: {ioMessage}");
+
+            Console.WriteLine();
+            Console.WriteLine("Press any key to continue.");
+            Console.ReadKey();
+
         }
 
         /// <summary>
@@ -89,6 +101,7 @@ namespace Project_FinchControl
                 Console.WriteLine("\td) Alarm System");
                 Console.WriteLine("\te) User Programming");
                 Console.WriteLine("\tf) Disconnect Finch Robot");
+                Console.WriteLine("\tg) Change Colors");
                 Console.WriteLine("\tq) Quit");
                 Console.Write("\t\tEnter Choice:");
                 menuChoice = Console.ReadLine().ToLower();
@@ -122,6 +135,10 @@ namespace Project_FinchControl
                         DisplayDisconnectFinchRobot(finchRobot);
                         break;
 
+                    case "g":
+                        ChangeColorsInterface();
+                        break;
+
                     case "q":
                         DisplayDisconnectFinchRobot(finchRobot);
                         quitApplication = true;
@@ -136,6 +153,129 @@ namespace Project_FinchControl
 
             } while (!quitApplication);
         }
+
+        #region CHANGE COLORS
+
+        ///*****************************************************************
+        ///                        Change Color Scheme
+        ///*****************************************************************
+
+
+        private static void ChangeColorsInterface()
+        {
+            (ConsoleColor foregroundColor, ConsoleColor backgroundColor) themeColors;
+            bool done = false;
+
+
+            themeColors = ReadThemeData(out string ioMessage);
+            Console.ForegroundColor = themeColors.foregroundColor;
+            Console.BackgroundColor = themeColors.backgroundColor;
+            DisplayScreenHeader("Change Color Scheme");
+
+            Console.WriteLine($"\tCurrent foreground color: {Console.ForegroundColor}");
+            Console.WriteLine($"\tCurrent background color: {Console.BackgroundColor}");
+            Console.WriteLine();
+
+
+                do
+                {
+                    themeColors.foregroundColor = GetConsoleColorFromUser("foreground");
+                    themeColors.backgroundColor = GetConsoleColorFromUser("background");
+
+                    //
+                    // set new theme
+                    //
+                    Console.ForegroundColor = themeColors.foregroundColor;
+                    Console.BackgroundColor = themeColors.backgroundColor;
+                    Console.Clear();
+                    DisplayScreenHeader("Change Color Scheme");
+                    Console.WriteLine($"\tNew foreground color: {Console.ForegroundColor}");
+                    Console.WriteLine($"\tNew background color: {Console.BackgroundColor}");
+
+                    Console.WriteLine();
+                    Console.Write("\tAre these the colors you would like? ");
+                    if (Console.ReadLine().ToLower() == "yes")
+                    {
+                        done = true;
+                        WriteThemeData(themeColors.foregroundColor, themeColors.backgroundColor);
+                    }
+
+                } while (!done);
+            
+            DisplayContinuePrompt();
+        }
+
+        //Read the existing color data
+
+        private static (ConsoleColor foregroundColor, ConsoleColor backgroundColor) ReadThemeData(out string ioMessage)
+        {
+            string dataPath = @"Data/data.txt";
+            string[] themeColors;
+
+            ConsoleColor foregroundColor = ConsoleColor.White;
+            ConsoleColor backgroundColor = ConsoleColor.Black;
+
+            try
+            {
+                themeColors = File.ReadAllLines(dataPath);
+                Enum.TryParse(themeColors[0], out foregroundColor);
+                Enum.TryParse(themeColors[1], out backgroundColor);
+                ioMessage = "Data loaded.";
+            }
+            catch (DirectoryNotFoundException)
+            {
+                ioMessage = "Unable to locate the folder for the data file.";
+            }
+            catch (FileNotFoundException)
+            {
+                ioMessage = "Unable to locate the data file.";
+            }
+            catch (Exception)
+            {
+                ioMessage = "Unable to read data file.";
+            }
+
+            return (foregroundColor, backgroundColor);
+
+        }
+
+        //Get color data from user
+
+        private static ConsoleColor GetConsoleColorFromUser(string property)
+        {
+            ConsoleColor consoleColor;
+            bool validConsoleColor;
+
+            do
+            {
+                Console.Write($"\tEnter a new color for the {property}:");
+                validConsoleColor = Enum.TryParse<ConsoleColor>(Console.ReadLine(), true, out consoleColor);
+
+                if (!validConsoleColor)
+                {
+                    Console.WriteLine("\n\t***** It appears you did not provide a valid console color. Please try again. *****\n");
+                }
+                else
+                {
+                    validConsoleColor = true;
+                }
+
+            } while (!validConsoleColor);
+
+            return consoleColor;
+        }
+
+        //Write color data to file
+
+        private static void WriteThemeData(ConsoleColor foreground, ConsoleColor background)
+        {
+            string dataPath = @"Data/data.txt";
+
+            File.WriteAllText(dataPath, foreground.ToString() + "\n");
+            File.AppendAllText(dataPath, background.ToString());
+        }
+
+        #endregion
 
 
         #region USER PROGRAMMING
